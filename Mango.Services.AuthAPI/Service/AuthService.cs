@@ -1,6 +1,7 @@
 ﻿using Mango.Services.AuthAPI.Data;
 using Mango.Services.AuthAPI.Models;
 using Mango.Services.AuthAPI.Models.Dto;
+using Mango.Services.AuthAPI.Repository.IRepository;
 using Mango.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,14 +9,14 @@ namespace Mango.Services.AuthAPI.Service
 {
     public class AuthService : IAuthService
     {
-        private readonly AppDbContext _db;
+        private readonly IApplicationUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-        public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IJwtTokenGenerator jwtTokenGenerator)
+        public AuthService(IApplicationUserRepository userRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IJwtTokenGenerator jwtTokenGenerator)
         {
-            _db = db;
+            this._userRepository = userRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             this._jwtTokenGenerator = jwtTokenGenerator;
@@ -23,7 +24,7 @@ namespace Mango.Services.AuthAPI.Service
 
         public async Task<bool> AssignRole(string email, string roleName)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            var user = await _userRepository.GetUserByEmailAsync(email);
             if (user != null)
             {
                 if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
@@ -40,7 +41,7 @@ namespace Mango.Services.AuthAPI.Service
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.UserName.ToLower());
+            var user = await _userRepository.GetUserByUsernameAsync(loginRequestDto.UserName);
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
             if (user == null || isValid == false)
@@ -50,7 +51,8 @@ namespace Mango.Services.AuthAPI.Service
 
 
             // if user was found, Generate JWT Token
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
             UserDto userDTO = new()
             {
@@ -84,7 +86,7 @@ namespace Mango.Services.AuthAPI.Service
                 var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
                 if (result.Succeeded)
                 {
-                    var userToReturn = _db.ApplicationUsers.First(u => u.UserName == registrationRequestDto.Email);
+                    var userToReturn = await _userRepository.GetUserByEmailAsync(registrationRequestDto.Email);
                     UserDto userDto = new()
                     {
                         Email = userToReturn.Email,

@@ -3,6 +3,7 @@ using Mango.Web.Service.IService;
 using Mango.Web.Utility;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Mango.Web.Service
@@ -10,12 +11,14 @@ namespace Mango.Web.Service
     public class BaseService : IBaseService
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly ITokenProvider tokenProvider;
 
-        public BaseService(IHttpClientFactory httpClientFactory)
+        public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider)
         {
             this.httpClientFactory = httpClientFactory;
+            this.tokenProvider = tokenProvider;
         }
-        public async Task<ResponseDto?> SendAsync(RequestDto requestDto)
+        public async Task<ResponseDto?> SendAsync(RequestDto requestDto, bool withBearer = true)
         {
             try
             {
@@ -23,7 +26,11 @@ namespace Mango.Web.Service
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
                 //token
-
+                if (withBearer)
+                {
+                    var token = tokenProvider.GetToken();
+                    message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
                 message.RequestUri = new Uri(requestDto.Url);
                 if (requestDto.Data != null)
                 {
@@ -33,10 +40,10 @@ namespace Mango.Web.Service
                 HttpResponseMessage apiResponse = null;
                 message.Method = requestDto.ApiType switch
                 {
-                    SD.ApiType.GET => HttpMethod.Get,
-                    SD.ApiType.POST => HttpMethod.Post,
-                    SD.ApiType.PUT => HttpMethod.Put,
-                    SD.ApiType.DELETE => HttpMethod.Delete,
+                    StaticData.ApiType.GET => HttpMethod.Get,
+                    StaticData.ApiType.POST => HttpMethod.Post,
+                    StaticData.ApiType.PUT => HttpMethod.Put,
+                    StaticData.ApiType.DELETE => HttpMethod.Delete,
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 apiResponse = await client.SendAsync(message);
