@@ -40,10 +40,10 @@ namespace Mango.Web.Service
                 HttpResponseMessage apiResponse = null;
                 message.Method = requestDto.ApiType switch
                 {
-                    StaticData.ApiType.GET => HttpMethod.Get,
-                    StaticData.ApiType.POST => HttpMethod.Post,
-                    StaticData.ApiType.PUT => HttpMethod.Put,
-                    StaticData.ApiType.DELETE => HttpMethod.Delete,
+                    StaticDetails.ApiType.GET => HttpMethod.Get,
+                    StaticDetails.ApiType.POST => HttpMethod.Post,
+                    StaticDetails.ApiType.PUT => HttpMethod.Put,
+                    StaticDetails.ApiType.DELETE => HttpMethod.Delete,
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 apiResponse = await client.SendAsync(message);

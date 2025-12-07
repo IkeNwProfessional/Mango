@@ -60,8 +60,8 @@ namespace Mango.Web.Controllers
         { 
             var roleList = new List<SelectListItem>()
             {
-                new SelectListItem() { Text = StaticData.RoleAdmin, Value = StaticData.RoleAdmin },
-                new SelectListItem() { Text = StaticData.RoleCustomer, Value = StaticData.RoleCustomer }
+                new SelectListItem() { Text = StaticDetails.RoleAdmin, Value = StaticDetails.RoleAdmin },
+                new SelectListItem() { Text = StaticDetails.RoleCustomer, Value = StaticDetails.RoleCustomer }
             };
 
             // set rolelist as ViewBag property and send to view
@@ -75,8 +75,8 @@ namespace Mango.Web.Controllers
 
             var roleList = new List<SelectListItem>()
             {
-                new SelectListItem() { Text = StaticData.RoleAdmin, Value = StaticData.RoleAdmin },
-                new SelectListItem() { Text = StaticData.RoleCustomer, Value = StaticData.RoleCustomer }
+                new SelectListItem() { Text = StaticDetails.RoleAdmin, Value = StaticDetails.RoleAdmin },
+                new SelectListItem() { Text = StaticDetails.RoleCustomer, Value = StaticDetails.RoleCustomer }
             };
 
             if (!ModelState.IsValid)
@@ -92,7 +92,7 @@ namespace Mango.Web.Controllers
             {
                 if (string.IsNullOrEmpty(registrationRequest.Role))
                 {
-                    registrationRequest.Role = StaticData.RoleCustomer;
+                    registrationRequest.Role = StaticDetails.RoleCustomer;
                 }
                 assignRole = await _authService.AssignRoleAsync(registrationRequest);
                 if (assignRole != null && assignRole.IsSuccess)

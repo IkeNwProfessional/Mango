@@ -1,4 +1,4 @@
-﻿using static Mango.Web.Utility.StaticData;
+﻿using static Mango.Web.Utility.StaticDetails;
 
 namespace Mango.Web.Models
 {

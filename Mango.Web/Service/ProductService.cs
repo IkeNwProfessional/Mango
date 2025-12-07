@@ -16,9 +16,9 @@ namespace Mango.Web.Service
         {
             return await baseService.SendAsync(new RequestDto
             {
-                ApiType = StaticData.ApiType.POST,
+                ApiType = StaticDetails.ApiType.POST,
                 Data = productDto,
-                Url = StaticData.ProductAPIBase + "/api/productapi/createproduct"
+                Url = StaticDetails.ProductAPIBase + "/api/productapi/createproduct"
             });
         }
 
@@ -26,8 +26,8 @@ namespace Mango.Web.Service
         {
             return await baseService.SendAsync(new RequestDto
             {
-                ApiType = StaticData.ApiType.DELETE,
-                Url = StaticData.ProductAPIBase + "/api/productapi/deleteproduct/" + id
+                ApiType = StaticDetails.ApiType.DELETE,
+                Url = StaticDetails.ProductAPIBase + "/api/productapi/deleteproduct/" + id
             });
         }
 
@@ -35,8 +35,8 @@ namespace Mango.Web.Service
         {
             return await baseService.SendAsync(new RequestDto
             {
-                ApiType = StaticData.ApiType.GET,
-                Url = StaticData.ProductAPIBase + "/api/productapi/getallproducts"
+                ApiType = StaticDetails.ApiType.GET,
+                Url = StaticDetails.ProductAPIBase + "/api/productapi/getallproducts"
             });
         }
 
@@ -44,8 +44,8 @@ namespace Mango.Web.Service
         {
             return await baseService.SendAsync(new RequestDto
             {
-                ApiType = StaticData.ApiType.GET,
-                Url = StaticData.ProductAPIBase + "/api/productapi/getproduct/" + id
+                ApiType = StaticDetails.ApiType.GET,
+                Url = StaticDetails.ProductAPIBase + "/api/productapi/getproduct/" + id
             });
         }
 
@@ -53,8 +53,8 @@ namespace Mango.Web.Service
         {
             return await baseService.SendAsync(new RequestDto
             {
-                ApiType = StaticData.ApiType.PUT,
-                Url = StaticData.ProductAPIBase + "/api/productapi/updateproduct/" + productDto.ProductId,
+                ApiType = StaticDetails.ApiType.PUT,
+                Url = StaticDetails.ProductAPIBase + "/api/productapi/updateproduct/" + productDto.ProductId,
                 Data = productDto
             });
         }
