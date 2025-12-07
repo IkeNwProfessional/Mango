@@ -364,3 +364,9 @@ FodyWeavers.xsd
 /Mango.Services.AuthAPI/appsettings.json
 /Mango.Services.CouponAPI/appsettings.json
 /Mango.Services.ProductAPI/appsettings.json
+/Mango.Services.ShoppingCartAPI/appsettings.json
+/Mango.Services.ShoppingCartAPI/appsettings.Development.json
+/Mango.Web/appsettings.json
+/Mango.Web/appsettings.Development.json
+/Mango.Services.ProductAPI/appsettings.Development.json
+/Mango.Services.CouponAPI/appsettings.Development.json
