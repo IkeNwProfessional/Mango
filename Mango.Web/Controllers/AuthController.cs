@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Mango.Web.Controllers
 {
@@ -57,14 +55,13 @@ namespace Mango.Web.Controllers
         }
         [HttpGet]
         public IActionResult Register()
-        { 
+        {
             var roleList = new List<SelectListItem>()
             {
                 new SelectListItem() { Text = StaticDetails.RoleAdmin, Value = StaticDetails.RoleAdmin },
                 new SelectListItem() { Text = StaticDetails.RoleCustomer, Value = StaticDetails.RoleCustomer }
             };
 
-            // set rolelist as ViewBag property and send to view
             ViewBag.RoleList = roleList;
             return View();
         }
@@ -106,7 +103,7 @@ namespace Mango.Web.Controllers
                 TempData["error"] = result.Message;
             }
 
-                ViewBag.RoleList = roleList;
+            ViewBag.RoleList = roleList;
             return View(registrationRequest);
         }
 

@@ -51,5 +51,15 @@ namespace Mango.Web.Service
                 Url = StaticDetails.ShoppingCartAPIBase + "/api/cart/ApplyCoupon"
             });
         }
+
+        public async Task<ResponseDto?> EmailCartAsync(CartDto cartDto)
+        {
+            return await baseService.SendAsync(new RequestDto
+            {
+                ApiType = StaticDetails.ApiType.POST,
+                Data = cartDto,
+                Url = StaticDetails.ShoppingCartAPIBase + "/api/cart/EmailCartRequest"
+            });
+        }
     }
 }

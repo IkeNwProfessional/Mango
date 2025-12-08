@@ -2,6 +2,7 @@
 using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Models;
 using Mango.Services.CouponAPI.Models.Dto;
+using Mango.Services.CouponAPI.Services.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,14 +13,12 @@ namespace Mango.Services.CouponAPI.Controllers
     [Authorize]
     public class CouponAPIController : ControllerBase
     {
-        private readonly AppDbContext _db;
-        private readonly IMapper mapper;
+        private readonly ICouponService couponService;
         private readonly ResponseDto _response;
 
-        public CouponAPIController(AppDbContext db, IMapper mapper)
+        public CouponAPIController(ICouponService couponService)
         {
-            _db = db;
-            this.mapper = mapper;
+            this.couponService = couponService;
             _response = new ResponseDto();
         }
 
@@ -28,8 +27,8 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {
-                IEnumerable<Coupon> coupons = _db.Coupons.ToList();
-                _response.Result = mapper.Map<IEnumerable<CouponDto>>(coupons);
+                var coupons = await couponService.GetAllCoupons();
+                _response.Result = coupons;
             }
             catch (Exception ex)
             {
@@ -41,12 +40,12 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpGet, Route("{id:int}")]
-        public ResponseDto Get(int id)
+        public async Task<ResponseDto> Get(int id)
         {
             try
             {
-                Coupon coupons = _db.Coupons.First(u => u.CouponId == id);
-                _response.Result = _response.Result = mapper.Map<CouponDto>(coupons);
+                var coupon = await couponService.GetCouponById(id);
+                _response.Result = coupon;
             }
             catch (Exception ex)
             {
@@ -58,12 +57,12 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpGet, Route("GetByCode/{code}")]
-        public ResponseDto GetByCode(string code)
+        public async Task<ResponseDto> GetByCode(string code)
         {
             try
             {
-                Coupon coupons = _db.Coupons.First(u => u.CouponCode.ToLower() == code.ToLower());
-                _response.Result = _response.Result = mapper.Map<CouponDto>(coupons);
+                var coupon = await couponService.GetCouponByCode(code);
+                _response.Result = coupon;
             }
             catch (Exception ex)
             {
@@ -76,15 +75,12 @@ namespace Mango.Services.CouponAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Post([FromBody] CouponDto couponDto)
+        public async Task<ResponseDto> Post([FromBody] CouponDto couponDto)
         {
             try
             {
-                Coupon coupon = mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Add(coupon);
-                _db.SaveChanges();
-
-                _response.Result = mapper.Map<CouponDto>(coupon);
+                var coupon = await couponService.CreateCoupon(couponDto);
+                _response.Result = coupon;
             }
             catch (Exception ex)
             {
@@ -97,15 +93,12 @@ namespace Mango.Services.CouponAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Put([FromBody] CouponDto couponDto)
+        public async Task<ResponseDto> Put([FromBody] CouponDto couponDto)
         {
             try
             {
-                Coupon coupon = mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Update(coupon);
-                _db.SaveChanges();
-
-                _response.Result = mapper.Map<CouponDto>(coupon);
+                var coupon = await couponService.UpdateCoupon(couponDto.CouponId, couponDto);
+                _response.Result = coupon;
             }
             catch (Exception ex)
             {
@@ -118,13 +111,12 @@ namespace Mango.Services.CouponAPI.Controllers
 
         [HttpDelete, Route("{id:int}")]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Delete(int id)
+        public async Task<ResponseDto> Delete(int id)
         {
             try
             {
-                Coupon coupon = _db.Coupons.First(u => u.CouponId == id);
-                _db.Coupons.Remove(coupon);
-                _db.SaveChanges();
+                var result = await couponService.DeleteCoupon(id);
+                _response.Result = result;
             }
             catch (Exception ex)
             {
