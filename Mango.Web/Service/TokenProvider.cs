@@ -1,12 +1,8 @@
 ﻿using Mango.Web.Service.IService;
 using Mango.Web.Utility;
-using Newtonsoft.Json.Linq;
 
 namespace Mango.Web.Service
 {
-    /// <summary>
-    /// Used to set, store and clear JWT token in cookies.
-    /// </summary>
     public class TokenProvider : ITokenProvider
     {
         private readonly IHttpContextAccessor _contextAccessor;
@@ -15,19 +11,19 @@ namespace Mango.Web.Service
             _contextAccessor = contextAccessor;
         }
 
-        public void ClearToken()
+        public void ClearTokenFromCookies()
         {
             _contextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetails.TokenCookie);
         }
 
-        public string? GetToken()
+        public string? GetTokenFromCookies()
         {
             string? token = null;
             bool? hasToken = _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(StaticDetails.TokenCookie, out token);
             return hasToken is true ? token : null;
         }
 
-        public void SetToken(string token)
+        public void SetTokenInCookies(string token)
         {
             _contextAccessor.HttpContext?.Response.Cookies.Append(StaticDetails.TokenCookie, token);
         }

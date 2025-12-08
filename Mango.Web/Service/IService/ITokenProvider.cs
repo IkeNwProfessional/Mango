@@ -2,8 +2,8 @@
 {
     public interface ITokenProvider
     {
-        void SetToken(string token);
-        string? GetToken();
-        void ClearToken();
+        void SetTokenInCookies(string token);
+        string? GetTokenFromCookies();
+        void ClearTokenFromCookies();
     }
 }

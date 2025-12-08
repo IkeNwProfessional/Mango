@@ -28,7 +28,7 @@ namespace Mango.Web.Service
                 //token
                 if (withBearer)
                 {
-                    var token = tokenProvider.GetToken();
+                    var token = tokenProvider.GetTokenFromCookies();
                     message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
                 message.RequestUri = new Uri(requestDto.Url);
