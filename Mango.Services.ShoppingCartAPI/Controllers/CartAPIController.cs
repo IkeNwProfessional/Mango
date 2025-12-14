@@ -4,10 +4,8 @@ using Mango.Services.ShoppingCartAPI.Data;
 using Mango.Services.ShoppingCartAPI.Models;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
 using Mango.Services.ShoppingCartAPI.Services.IService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.PortableExecutable;
 
 namespace Mango.Services.ShoppingCartAPI.Controllers
 {
@@ -109,7 +107,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             try
             {
                 _logger.LogInformation("Publishing email cart request for user: {UserId}", cartDto.CartHeader.UserId);
-                await messageBus.PublishMessage(cartDto, configuration.GetValue<string>("TopicsAndQueueNames:EmailShoppingCart"));
+                await messageBus.PublishMessage(cartDto, configuration.GetValue<string>("TopicsAndQueueNames:EmailShoppingCartQueue"));
                 _response.Result = true;
                 _logger.LogInformation("Email cart request published successfully for user: {UserId}", cartDto.CartHeader.UserId);
             }
