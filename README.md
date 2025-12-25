@@ -1,2 +1,2 @@
-# Mango
-Mango is an online shop built using asp.net and following the MVC pattern. It's comprised of several microservervices all communicating with each other via REST endpoints and Azure Service Bus. 
+# Mango (Still in development)
+Mango is an online shop built using asp.net and following the MVC pattern. It's comprised of several microservervices all communicating with each other via REST endpoints and Azure Service Bus. This project demonstrates my understanding of core enterprise software technologies(dependency injection, test driven development, microservice development, API development, Repository Pattern, ORMs, DTOs, Authentication/Authorization, JWT, etc) 
